@@ -12,6 +12,7 @@ module.exports = grammar({
 
   rules: {
       script: $ => seq(repeat('\n'),
+                       optional(seq($.title_page, repeat1('\n'))),
                        repeat(choice($.dialogue, $._action_block)),
                        repeat($.scene),
                        repeat($.section6),
@@ -27,39 +28,44 @@ module.exports = grammar({
           repeat1(seq($.spoken, '\n')),
           '\n'),
 
-      // dialogue: $ => prec.right(1, seq(
-      //     $.character,
-      //     optional(seq('\n', $.parenthetical)),
-      //     repeat1(seq('\n', $.spoken)),
-      //     $._delimit)),
+      //title page is formatted key: value/s
 
-      _raw_script: $=> repeat1(choice($.dialogue,
-                                      $._action_block)),
+      title_page: $=> repeat1($.k_v_pair),
 
-      //fully_spoken: $ => seq(repeat1(seq('\n', $.spoken)), '\n'),
+      k_v_pair: $=> prec.right(2, seq($.key, ':',
+                                   choice(
+                                       seq(' ', $.value),
+                                       repeat1(seq($._indent, $.value))),
+                                   '\n')),
 
-      _final_line: $ => seq($.spoken, $._delimit),
+      value: $=> prec(2, /.+/),
 
-      _dialogue_plus: $ => seq($.dialogue, $._delimit),
+      key: $=> choice('Title', 'Credit', 'Author', 'Source', 'Draft date',
+                      'Contact', 'Authors'),
 
-      _action_block: $ => seq($.action, $._delimit),
+      _indent: $=> choice(seq('\n', '   ', repeat(' '))),
+
+
+      //TODO: allow forcing a character with the @ symbol
+      //TODO: allow dual dialog via ^ symbol
 
       character: $ => prec(1, /([A-Z*_]+[0-9A-Z (._\-')]*)/),
       //([ \t]*[^<>a-z\s\/\n][^<>a-z:!\?\n]*[^<>a-z\(!\?:,\n\.][ \t]?)
       //([ \t]*[^<>a-z\s\/\n][^<>a-z:!\?\n]*[^<>a-z(!\?:,\n\.][ \t]?)
 
-      spoken: $ =>  prec(1, /([ \t]*([^[=(\s#]([A-Za-z0-9.,-_ ])+)[ \t]?)/),
-      //  /([ \t]*([^(\s]([A-Za-z0-9.,-_ ])+)[ \t]?)/
-      //the above regex is your original. use
-      //make this a line that must have no endline chars
-
       parenthetical: $ => prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
-      //make this refer 2 NO endline chars.
+      transition: $ => choice(seq('\n', $._all_caps, 'TO:', $._delimit),
+                              seq('>', /[^<\n]+/, $._delimit)),
 
-      action: $ => /([ \t]*([^(\n#=]([A-Za-z0-9.,-_ ])+)[a-z]([A-Za-z0-9.,-_ ])+[ \t]?)/,
-      //extras
+      spoken: $ => prec(1, $._text),
 
-      //note: $ => token(prec(2, /\[{2}([^[\]]+)\]{2}/)),
+      page_break: $ => seq('\n', '===', repeat('='), repeat('\n')),
+
+      //TODO: allow forcing an action with an ! character.
+
+      action: $ => choice(seq('!', /.+/), $._text),
+
+      centered_action: $ => seq('>', $._text, '<'),
 
       note: $ => token(seq('[[', /[^[\]]+/, ']]')),
 
@@ -69,12 +75,47 @@ module.exports = grammar({
 
       synopsis: $=> seq('\n','=', /.+/),
 
+      //text emphasis utilities
+
+      _text: $=> repeat1(choice($.normal_txt, $.italic_txt, $.bold_txt,
+                                $.bold_and_italic_txt, $.underlined_txt)),
+
+      normal_txt: $=> $._general_text,
+
+      italic_txt: $=> seq('*', $._general_text, '*'),
+
+      bold_txt: $=> seq('**', $._general_text, '**'),
+
+      bold_and_italic_txt: $=> seq('***', $._general_text, '***'),
+
+      underlined_txt: $=> seq('_', $._general_text, '_'),
+
+      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/,
+
+      //utilities
+
+      _raw_script: $=> repeat1(choice($._d_or_a,)),
+
+      _d_or_a: $ => choice($.dialogue, $._action_block, $._dialogue_plus,
+                           $._action_plus),
+
+      _dialogue_plus: $ => seq($.dialogue, repeat('\n')),
+
+      _action_plus: $ => seq($._action_block, repeat('\n')),
+
+      _action_block: $ => seq(choice($.action, $.centered_action),
+                              $._delimit),
+
+      _all_caps: $ => /([A-Z*_]+[0-9A-Z (._\-')]*)/,
+
       //organizer things
 
       _scene_loc: $=> prec(4, token(seq(choice('INT', 'EXT'),
                                    optional('.'),
                                    optional(choice('/INT.', '/EXT.')),
-                                   ' '))),
+                                        ' '))),
+      //TODO: make scene headings include optional numbers
+      //TODO: allow forced scene headings w/ periods
 
       scene_heading: $ => prec(5, seq($._scene_loc, /.+/)),
 

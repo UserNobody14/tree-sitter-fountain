@@ -1,0 +1,66 @@
+==========
+General + Emphasis
+==========
+GAHDA
+blopoo
+
+FAFA
+(daj all agg)
+*addf adfsfa* galbal slgj.
+
+DAFGA
+sglal
+
+
+------
+(script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(parenthetical)
+(spoken (italic_txt) (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt))))
+==========
+Individual + Emphasis
+==========
+FGA
+wahaha **adfasd**
+
+
+------
+(script
+(dialogue
+(character)
+(spoken (normal_txt) (bold_txt))))
+==========
+Parentheticals + Emphasis
+==========
+BLAH
+(droagj fghlk)
+ghahiu ***blakaareadmi***
+
+
+------
+(script
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt) (bold_and_italic_txt))))
+==========
+Multiple Lines + Emphasis
+==========
+GORAB
+Foghalkd dgjl _underliner_
+dlkgjl hlhsldkjhg. sdf _fsdf sdflsd_
+
+
+-----
+(script
+(dialogue
+(character)
+(spoken (normal_txt) (underlined_txt))
+(spoken (normal_txt) (underlined_txt))))

@@ -1,0 +1,129 @@
+=========
+Basics
+========
+#What
+##Gublah
+###Dublah
+##Gubadub
+#Nuthub
+
+-------
+(script
+(section1 (sec_heading1)
+(section2 (sec_heading2)
+(section3 (sec_heading3)))
+(section2 (sec_heading2)))
+(section1 (sec_heading1)))
+=========
+Advanced Sectioneering
+========
+#What
+##Gublah
+###Dublah
+##Gubadub
+#Nuthub
+###Fslahd
+##sslkd
+###dada
+###sadafa
+##safsfda
+
+-------
+(script
+(section1 (sec_heading1)
+(section2 (sec_heading2)
+(section3 (sec_heading3)))
+(section2 (sec_heading2)))
+(section1 (sec_heading1)
+(section3 (sec_heading3))
+(section2 (sec_heading2)
+(section3 (sec_heading3))
+(section3 (sec_heading3)))
+(section2 (sec_heading2))))
+==================
+Ultra Simple
+==================
+#Blahlah
+##Bladkl
+
+------------------
+(script
+(section1 (sec_heading1)
+(section2 (sec_heading2))))
+==================
+With Dialogue
+==================
+#Bgaljh slkjf
+INT. FOEWABLE
+
+BOBBY
+blah
+
+ROBBY
+(flah)
+hurrah
+
+
+--------------
+(script
+(section1 (sec_heading1)
+(scene (scene_heading)
+(dialogue (character)
+(spoken (normal_txt)))
+(dialogue (character)
+(parenthetical)
+(spoken (normal_txt))))))
+==================
+Just Scenes
+==================
+INT. FOEWABLE
+
+BOBBY
+blah
+
+ROBBY
+(flah)
+hurrah
+
+EXT. FLOWABLA
+
+Durhuerderher aga action blahlasjkdhg.
+
+GRUGHDA
+goshglh
+
+
+-------------
+(script
+(scene (scene_heading)
+(dialogue (character)
+(spoken (normal_txt)))
+(dialogue (character)
+(parenthetical)
+(spoken (normal_txt))))
+(scene (scene_heading)
+(action (normal_txt))
+(dialogue
+(character)
+(spoken (normal_txt)))))
+==================
+With misc Blank Lines
+==================
+#Nalsa
+
+
+#BAKDalsafa
+
+
+
+INT. GORFSA
+
+##Dalfala
+
+
+----------------
+(script
+(section1 (sec_heading1))
+(section1 (sec_heading1)
+(scene (scene_heading))
+(section2 (sec_heading2))))

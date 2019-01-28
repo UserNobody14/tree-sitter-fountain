@@ -50,8 +50,6 @@ module.exports = grammar({
       //TODO: allow dual dialog via ^ symbol
 
       character: $ => prec(1, /([A-Z*_]+[0-9A-Z (._\-')]*)/),
-      //([ \t]*[^<>a-z\s\/\n][^<>a-z:!\?\n]*[^<>a-z\(!\?:,\n\.][ \t]?)
-      //([ \t]*[^<>a-z\s\/\n][^<>a-z:!\?\n]*[^<>a-z(!\?:,\n\.][ \t]?)
 
       parenthetical: $ => prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
       transition: $ => choice(seq('\n', $._all_caps, 'TO:', $._delimit),

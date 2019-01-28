@@ -1,0 +1,140 @@
+==========
+General
+==========
+GAHDA
+blopoo
+
+FAFA
+(daj all agg)
+galbal slgj.
+
+DAFGA
+sglal
+
+
+------------
+(script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt))))
+==========
+Individual
+==========
+FGA
+wahaha
+
+
+------
+(script
+(dialogue
+(character)
+(spoken (normal_txt))))
+==========
+Parentheticals
+==========
+BLAH
+(droagj fghlk)
+ghahiu
+
+
+------
+(script
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt))))
+==========
+Multiple Lines
+==========
+GORAB
+Foghalkd dgjl
+dlkgjl hlhsldkjhg.
+
+
+-----
+(script
+(dialogue
+(character)
+(spoken (normal_txt)) (spoken (normal_txt))))
+=========
+Boneyard
+========
+GORADA
+/*
+shal
+fkj
+kdjl
+*/
+foraga
+
+
+----
+(script
+(dialogue
+(character)
+(boneyard)
+(spoken (normal_txt))))
+==========
+Note
+==========
+BOLAF
+glalkh
+[[fldskd slkdjfl]]
+
+----
+(script
+(dialogue
+(character)
+(spoken (normal_txt)) (note)))
+==========
+Note Test Extra1
+==========
+BOLAF
+glalkh
+
+
+----
+(script
+(dialogue
+(character)
+(spoken (normal_txt))))
+==========
+General with Notes
+==========
+GAHDA
+blopoo
+
+FAFA
+(daj all agg)
+galbal slgj.
+
+GAFDA
+lskd lskdjglk fjl.
+[[lkjls kdjlkdj lskjdlfgjl]]
+DAFGA
+sglal
+
+
+------
+(script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt))
+(note))
+(dialogue
+(character)
+(spoken (normal_txt))))

@@ -92,16 +92,32 @@ glalkh
 (script
 (dialogue
 (character)
-(spoken (normal_txt)) (note)))
+(spoken (normal_txt)))
+(note))
 ==========
-Note Test Extra1
+Action + Forced Action + Centered
 ==========
 BOLAF
 glalkh
 
+Glakdhjlkhdl alkdhglkasdhhgghl
+
+galdkghlaswejhglasjdhgla.sfgl.
+
+!GLOB
+
+GLOB
+ghladkhldkl. .asdkhgl.
+
 
 ----
 (script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(action (normal_txt))
+(action (normal_txt))
+(action)
 (dialogue
 (character)
 (spoken (normal_txt))))
@@ -121,6 +137,15 @@ lskd lskdjglk fjl.
 DAFGA
 sglal
 
+GAFDA
+lskd lskdjglk fjl.
+
+[[lkjls kdjlkdj lskjdlfgjl]]
+
+DAFGA
+sglal
+
+
 
 ------
 (script
@@ -133,8 +158,43 @@ sglal
 (spoken (normal_txt)))
 (dialogue
 (character)
+(spoken (normal_txt)))
+(note)
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt)))
+(note)
+(dialogue
+(character)
+(spoken (normal_txt))))
+==========
+General + Synopsis
+==========
+GAHDA
+blopoo
+
+FAFA
+(daj all agg)
+galbal slgj.
+=Fladg sdflk slkdhjgl.
+
+DAFGA
+sglal
+
+
+------------
+(script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(parenthetical)
 (spoken (normal_txt))
-(note))
+(synopsis))
 (dialogue
 (character)
 (spoken (normal_txt))))

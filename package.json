@@ -1,0 +1,21 @@
+{
+  "name": "tree-sitter-fountain",
+  "version": "1.0.0",
+  "description": "A grammar for fountain.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tree-sitter test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "y"
+  },
+  "author": "Benjamin Sobel",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.12.1"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.13.15"
+  }
+}

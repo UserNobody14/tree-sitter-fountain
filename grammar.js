@@ -1,19 +1,22 @@
 module.exports = grammar({
   name: "Fountain",
 
-    extras: $ => [$.note, $.boneyard],
+    extras: $ => [$.note, $.boneyard, $.synopsis],
+
+    //TODO: LONG TERM:
+    //make an 'ending early' version of dialogue.
+    //make synopsis, boneyard, and note stop being a part of dialogue?
 
     //conflicts: $ => [[$.section1, $.section2, $.section3, $.section4]]
 
     //TODO: Make less endline char sensitive
     //TODO: make dialog & action able to fall directly under sections.
-    //TODO: make synopses work.
     //TODO: make internal spoken emphasis chars visible.
 
   rules: {
       script: $ => seq(repeat('\n'),
                        optional(seq($.title_page, repeat1('\n'))),
-                       repeat(choice($.dialogue, $._action_block)),
+                       repeat($._raw_script),
                        repeat($.scene),
                        repeat($.section6),
                        repeat($.section5),
@@ -24,18 +27,17 @@ module.exports = grammar({
 
       dialogue: $ => seq(
           $.character,
-          optional(seq('\n', $.parenthetical)), '\n',
-          repeat1(seq($.spoken, '\n')),
+          optional(seq('\n', $.parenthetical)),
+          repeat1(seq('\n', $.spoken)),
           '\n'),
 
       //title page is formatted key: value/s
-
       title_page: $=> repeat1($.k_v_pair),
 
-      k_v_pair: $=> prec.right(2, seq($.key, ':',
-                                   choice(
-                                       seq(' ', $.value),
-                                       repeat1(seq($._indent, $.value))),
+      k_v_pair: $=> prec.right(2, seq($.key, ':', $._value_group)),
+
+      _value_group: $=> choice(seq(' ', $.value, '\n'),
+                               seq(repeat1(seq($._indent, $.value)),
                                    '\n')),
 
       value: $=> prec(2, /.+/),
@@ -47,12 +49,16 @@ module.exports = grammar({
 
 
       //TODO: allow forcing a character with the @ symbol
-      //TODO: allow dual dialog via ^ symbol
 
-      character: $ => prec(1, /([A-Z*_]+[0-9A-Z (._\-')]*)/),
+      //TODO: allow dual dialog via ^ symbol
+      //TODO: allow same line parentheticals??
+      //called character extensions?
+      //TODO: allow multiple parentheticals?!
+
+      character: $ => choice(seq('@', /.+/), $._all_caps),
 
       parenthetical: $ => prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
-      transition: $ => choice(seq('\n', $._all_caps, 'TO:', $._delimit),
+      transition: $ => choice(seq($._all_caps, 'TO:', $._delimit),
                               seq('>', /[^<\n]+/, $._delimit)),
 
       spoken: $ => prec(1, $._text),
@@ -61,7 +67,9 @@ module.exports = grammar({
 
       //TODO: allow forcing an action with an ! character.
 
-      action: $ => choice(seq('!', /.+/), $._text),
+      action: $ => choice($._forced_action, $._text),
+
+      _forced_action: $ => prec(2, seq('!', /.+/)),
 
       centered_action: $ => seq('>', $._text, '<'),
 
@@ -71,12 +79,22 @@ module.exports = grammar({
 
       _delimit: $=> seq('\n', '\n'),
 
-      synopsis: $=> seq('\n','=', /.+/),
+      synopsis: $=> token(seq('\n','=', /.+/)),
 
       //text emphasis utilities
 
-      _text: $=> repeat1(choice($.normal_txt, $.italic_txt, $.bold_txt,
-                                $.bold_and_italic_txt, $.underlined_txt)),
+      _text: $=> seq(choice(
+          alias($._not_special,
+              $.normal_txt),
+          $.italic_txt,
+          $.bold_txt,
+          $.bold_and_italic_txt,
+          $.underlined_txt),
+                     repeat(choice($.normal_txt,
+                                   $.italic_txt,
+                                   $.bold_txt,
+                                   $.bold_and_italic_txt,
+                                   $.underlined_txt))),
 
       normal_txt: $=> $._general_text,
 
@@ -88,21 +106,23 @@ module.exports = grammar({
 
       underlined_txt: $=> seq('_', $._general_text, '_'),
 
-      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/,
+      //Line starting char utilities
+
+      _not_special: $=> seq(/[^!@.>(#=_*~\n]/,
+                            /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/),
 
       //utilities
 
-      _raw_script: $=> repeat1(choice($._d_or_a,)),
+      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/,
 
-      _d_or_a: $ => choice($.dialogue, $._action_block, $._dialogue_plus,
-                           $._action_plus),
+      _raw_script: $ => choice($._dialogue_block, $._action_block),
 
-      _dialogue_plus: $ => seq($.dialogue, repeat('\n')),
+      _dialogue_block: $ => prec.right(1, seq($.dialogue, '\n',
+                                              repeat('\n'))),
 
-      _action_plus: $ => seq($._action_block, repeat('\n')),
-
-      _action_block: $ => seq(choice($.action, $.centered_action),
-                              $._delimit),
+      _action_block: $ => prec.right(1, seq(choice($.action,
+                                                   $.centered_action),
+                                         $._delimit, repeat('\n'))),
 
       _all_caps: $ => /([A-Z*_]+[0-9A-Z (._\-')]*)/,
 
@@ -115,12 +135,20 @@ module.exports = grammar({
       //TODO: make scene headings include optional numbers
       //TODO: allow forced scene headings w/ periods
 
-      scene_heading: $ => prec(5, seq($._scene_loc, /.+/)),
+      scene_number: $ => /(\d|[A-Z]|[-_])+/,
 
-      scene: $ => prec.right(6, seq($.scene_heading, $._delimit,
-                                    repeat(choice($.dialogue,
-                                                  $._action_block)),
-                                    repeat('\n')
+      _scene_numbering: $ => seq('#', $.scene_number, '#'),
+
+      scene_heading: $ => prec(5, seq(choice(seq('.', /[^#\n]+/),
+                                          seq($._scene_loc,
+                                              $._all_caps)),
+                                      optional($._scene_numbering))),
+
+      scene: $ => prec.right(6, seq($.scene_heading,
+
+                                    $._delimit,
+                                    repeat($._raw_script)
+                                    //repeat('\n')
                                    )),
 
       //section headings and such

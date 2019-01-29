@@ -107,6 +107,39 @@ goshglh
 (character)
 (spoken (normal_txt)))))
 ==================
+Scenes + Numbers + Forced
+==================
+INT. FOEWABLE #44#
+
+BOBBY
+blah
+
+ROBBY
+(flah)
+hurrah
+
+.Extrada FLOWABLA
+
+Durhuerderher aga action blahlasjkdhg.
+
+GRUGHDA
+goshglh
+
+
+-------------
+(script
+(scene (scene_heading (scene_number))
+(dialogue (character)
+(spoken (normal_txt)))
+(dialogue (character)
+(parenthetical)
+(spoken (normal_txt))))
+(scene (scene_heading)
+(action (normal_txt))
+(dialogue
+(character)
+(spoken (normal_txt)))))
+==================
 With misc Blank Lines
 ==================
 #Nalsa

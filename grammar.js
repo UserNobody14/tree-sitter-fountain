@@ -31,72 +31,47 @@ module.exports = grammar({
           repeat1(seq('\n', $.spoken)),
           '\n'),
 
-      //title page is formatted key: value/s
-      title_page: $=> repeat1($.k_v_pair),
-
-      k_v_pair: $=> prec.right(2, seq($.key, ':', $._value_group)),
-
-      _value_group: $=> choice(seq(' ', $.value, '\n'),
-                               seq(repeat1(seq($._indent, $.value)),
-                                   '\n')),
-
-      value: $=> prec(2, /.+/),
-
-      key: $=> choice('Title', 'Credit', 'Author', 'Source', 'Draft date',
-                      'Contact', 'Authors'),
-
-      _indent: $=> choice(seq('\n', '   ', repeat(' '))),
-
-
-      //TODO: allow forcing a character with the @ symbol
-
       //TODO: allow dual dialog via ^ symbol
       //TODO: allow same line parentheticals??
       //called character extensions?
       //TODO: allow multiple parentheticals?!
 
-      character: $ => choice(seq('@', /.+/), $._all_caps),
+      character: $ => choice($._forced_character, $._all_caps),
 
-      parenthetical: $ => prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
-      transition: $ => choice(seq($._all_caps, 'TO:', $._delimit),
-                              seq('>', /[^<\n]+/, $._delimit)),
+      //parenthetical: $=> prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
+
+      parenthetical: $=> seq('(', $._general_text, ')'),
 
       spoken: $ => prec(1, $._text),
 
-      page_break: $ => seq('\n', '===', repeat('='), repeat('\n')),
-
-      //TODO: allow forcing an action with an ! character.
-
       action: $ => choice($._forced_action, $._text),
-
-      _forced_action: $ => prec(2, seq('!', /.+/)),
-
-      centered_action: $ => seq('>', $._text, '<'),
-
-      note: $ => token(seq('[[', /[^[\]]+/, ']]')),
-
-      boneyard: $=> /\n\/\*(.|\n)*\n\*\//,
 
       _delimit: $=> seq('\n', '\n'),
 
-      synopsis: $=> token(seq('\n','=', /.+/)),
+      centered_action: $ => seq('>', $._text, '<'),
+
+      page_break: $ => seq('\n', '===', repeat('='), repeat('\n')),
+
+      transition: $ => choice(seq($._all_caps, 'TO:', $._delimit),
+                              seq('>', /[^<\n]+/, $._delimit)),
 
       //text emphasis utilities
 
-      _text: $=> seq(choice(
-          alias($._not_special,
-              $.normal_txt),
-          $.italic_txt,
-          $.bold_txt,
-          $.bold_and_italic_txt,
-          $.underlined_txt),
-                     repeat(choice($.normal_txt,
-                                   $.italic_txt,
-                                   $.bold_txt,
-                                   $.bold_and_italic_txt,
-                                   $.underlined_txt))),
+      //TODO: prevent errors caused by unclosed syntax? Make it carry over?
+      // ie:
+      //sldkjghlhlkjh***sldkhflskdhf
+      //slkdjflf***
+
+      _text: $=> seq(choice(alias($._not_special,$.normal_txt),
+                            $._emphasis),
+                     repeat(choice($.normal_txt, $._emphasis))),
 
       normal_txt: $=> $._general_text,
+
+      //Emphasis Text. grammar
+
+      _emphasis: $=> choice($.italic_txt, $.bold_txt,
+                            $.bold_and_italic_txt, $.underlined_txt),
 
       italic_txt: $=> seq('*', $._general_text, '*'),
 
@@ -105,6 +80,14 @@ module.exports = grammar({
       bold_and_italic_txt: $=> seq('***', $._general_text, '***'),
 
       underlined_txt: $=> seq('_', $._general_text, '_'),
+
+      //forced items
+
+      _forced_action: $ => prec(2, seq('!', /.+/)),
+
+      _forced_character: $ => seq('@', /.+/),
+
+      _forced_scene: $ => seq('.',  /[^#\n]+/),
 
       //Line starting char utilities
 
@@ -128,41 +111,29 @@ module.exports = grammar({
 
       //organizer things
 
-      _scene_loc: $=> prec(4, token(seq(choice('INT', 'EXT'),
-                                   optional('.'),
-                                   optional(choice('/INT.', '/EXT.')),
-                                        ' '))),
-      //TODO: make scene headings include optional numbers
-      //TODO: allow forced scene headings w/ periods
+      _scene_loc: $=> prec(4, token(
+          seq(choice('INT', 'EXT', 'EST', 'INT/EXT', 'I/E', 'INT./EXT'),
+              choice('.', ' ', '. ')))),
 
       scene_number: $ => /(\d|[A-Z]|[-_])+/,
 
-      _scene_numbering: $ => seq('#', $.scene_number, '#'),
+      _numbering: $ => seq('#', $.scene_number, '#'),
 
-      scene_heading: $ => prec(5, seq(choice(seq('.', /[^#\n]+/),
-                                          seq($._scene_loc,
-                                              $._all_caps)),
-                                      optional($._scene_numbering))),
+      scene_heading: $ => prec(5, seq(
+          choice($._forced_scene, seq($._scene_loc,
+                                      $._all_caps)),
+          optional($._numbering))),
 
-      scene: $ => prec.right(6, seq($.scene_heading,
-
-                                    $._delimit,
-                                    repeat($._raw_script)
-                                    //repeat('\n')
-                                   )),
+      scene: $ => prec.right(6, seq($.scene_heading, $._delimit,
+                                    repeat($._raw_script))),
 
       //section headings and such
 
       sec_heading1: $=> seq('#', /[A-Za-z0-9.,-_ ]+/),
-
       sec_heading2: $=> seq('##', /[A-Za-z0-9.,-_ ]+/),
-
       sec_heading3: $=> seq('###', /[A-Za-z0-9.,-_ ]+/),
-
       sec_heading4: $=> seq('####', /[A-Za-z0-9.,-_ ]+/),
-
       sec_heading5: $=> seq('#####', /[A-Za-z0-9.,-_ ]+/),
-
       sec_heading6: $=> seq('######', /[A-Za-z0-9.,-_ ]+/),
 
       //Each sec is defined separately to make it
@@ -206,7 +177,31 @@ module.exports = grammar({
 
       section6: $=> prec.right(7, seq($.sec_heading6, repeat1('\n'),
                                       repeat($.scene),
-                                      repeat('\n')))
+                                      repeat('\n'))),
+
+      //title page is formatted key: value/s
+      title_page: $=> repeat1($.k_v_pair),
+
+      k_v_pair: $=> prec.right(2, seq($.key, ':', $._value_group)),
+
+      _value_group: $=> choice(seq(' ', $.value, '\n'),
+                               seq(repeat1(seq($._indent, $.value)),
+                                   '\n')),
+
+      value: $=> prec(2, /.+/),
+
+      key: $=> choice('Title', 'Credit', 'Author', 'Source', 'Draft date',
+                      'Contact', 'Authors'),
+
+      _indent: $=> choice(seq('\n', '   ', repeat(' '))),
+
+      //Extras & Comments:
+
+      note: $ => token(seq('[[', /[^[\]]+/, ']]')),
+
+      boneyard: $=> /\n\/\*(.|\n)*\n\*\//,
+
+      synopsis: $=> token(seq('\n','=', /.+/))
 
   }
 });

@@ -28,27 +28,36 @@ module.exports = grammar({
       dialogue: $ => seq(
           $.character,
           optional(seq('\n', $.parenthetical)),
-          repeat1(seq('\n', $.spoken)),
+          seq('\n', $.spoken),
+          repeat(choice(seq('\n', $.spoken),
+                        seq('\n', $.parenthetical))),
           '\n'),
 
       //TODO: allow dual dialog via ^ symbol
       //TODO: allow same line parentheticals??
       //called character extensions?
       //TODO: allow multiple parentheticals?!
+      //TODO: add in lyrics?
 
       character: $ => choice($._forced_character, $._all_caps),
 
-      //parenthetical: $=> prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
+      //$=> prec(2, /[ \t]?(\()+(([A-Za-z0-9 ])+)(\))+[ \t]?/),
 
       parenthetical: $=> seq('(', $._general_text, ')'),
 
       spoken: $ => prec(1, $._text),
 
+      //character_extension: $ => prec(1, $._parenthetical),
+
       action: $ => choice($._forced_action, $._text),
 
       _delimit: $=> seq('\n', '\n'),
 
+      _dialogue_line: $ => choice($.parenthetical, $.spoken),
+
       centered_action: $ => seq('>', $._text, '<'),
+
+      lyric: $ => seq('~', $._text),
 
       page_break: $ => seq('\n', '===', repeat('='), repeat('\n')),
 
@@ -61,6 +70,7 @@ module.exports = grammar({
       // ie:
       //sldkjghlhlkjh***sldkhflskdhf
       //slkdjflf***
+      //perhaps not. Seems quite difficult for a very small fix.
 
       _text: $=> seq(choice(alias($._not_special,$.normal_txt),
                             $._emphasis),

@@ -1,0 +1,2 @@
+Remember to export PATH=$PATH:~/path/to/this/folder
+and echo $PATH to make sure it took.

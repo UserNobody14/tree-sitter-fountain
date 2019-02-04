@@ -102,11 +102,11 @@ module.exports = grammar({
       //Line starting char utilities
 
       _not_special: $=> seq(/[^!@.>(#=_*~\n]/,
-                            /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/),
+                            /((\\(\*|_))|[A-Za-z0-9.,'\-!? ])+/),
 
       //utilities
 
-      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,\-!? ])+/,
+      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,'\-!? ])+/,
 
       _raw_script: $ => choice($._dialogue_block, $._action_block),
 

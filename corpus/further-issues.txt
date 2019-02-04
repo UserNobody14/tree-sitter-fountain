@@ -1,0 +1,34 @@
+============
+Further Issues
+============
+LINT'S FATHER
+I don't think I am. Who's it from?
+
+LINT'S MOTHER
+Well that's just the thing, it doesn't say! It just has
+a bunch of handle with care stuff and our address!
+It doesn't even have a return address,
+isn't that like, not allowed!
+
+LINT'S FATHER
+I have no idea, it could be from one of your
+relatives gettin' careless and left it off? Doesn't
+matter, open it up.
+
+
+-------------
+(script
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt))
+(spoken (normal_txt))
+(spoken (normal_txt))
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt))
+(spoken (normal_txt))
+(spoken (normal_txt))))

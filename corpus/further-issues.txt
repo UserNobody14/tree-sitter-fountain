@@ -32,3 +32,37 @@ matter, open it up.
 (spoken (normal_txt))
 (spoken (normal_txt))
 (spoken (normal_txt))))
+===========
+Even More Issues
+===========
+#blah
+
+NATASHA
+(yelling)
+What did you do?! Why would you say that?!
+Aren't we supposed to be working in secret, like, under the radar!
+
+NEIL
+It really doesn't matter, so why waste time?
+
+NATASHA
+(yelling)
+What do mean it doesn't matter?
+
+
+--------------
+(script
+(section1
+(sec_heading1)
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt))
+(spoken (normal_txt)))
+(dialogue
+(character)
+(spoken (normal_txt)))
+(dialogue
+(character)
+(parenthetical)
+(spoken (normal_txt)))))

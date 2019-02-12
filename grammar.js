@@ -5,8 +5,6 @@ module.exports = grammar({
 
     //TODO: LONG TERM:
     //make an 'ending early' version of dialogue.
-    //make synopsis, boneyard, and note stop being a part of dialogue?
-
     //conflicts: $ => [[$.section1, $.section2, $.section3, $.section4]]
 
     //TODO: Make less endline char sensitive
@@ -72,7 +70,7 @@ module.exports = grammar({
       //slkdjflf***
       //perhaps not. Seems quite difficult for a very small fix.
 
-      _text: $=> seq(choice(alias($._not_special,$.normal_txt),
+      _text: $=> seq(choice(alias($._not_special, $.normal_txt),
                             $._emphasis),
                      repeat(choice($.normal_txt, $._emphasis))),
 
@@ -102,11 +100,11 @@ module.exports = grammar({
       //Line starting char utilities
 
       _not_special: $=> seq(/[^!@.>(#=_*~\n]/,
-                            /((\\(\*|_))|[A-Za-z0-9.,'\-!? ])+/),
+                            /((\\(\*|_))|[A-Za-z0-9.,'\-!? &;])+/),
 
       //utilities
 
-      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,'\-!? ])+/,
+      _general_text: $=> /((\\(\*|_))|[A-Za-z0-9.,'\-!? &;])+/,
 
       _raw_script: $ => choice($._dialogue_block, $._action_block),
 
@@ -138,56 +136,69 @@ module.exports = grammar({
                                     repeat($._raw_script))),
 
       //section headings and such
+      _section_heading_text: $=> /[A-Za-z0-9.,-_ ()?'&]+/,
 
-      sec_heading1: $=> seq('#', /[A-Za-z0-9.,-_ ]+/),
-      sec_heading2: $=> seq('##', /[A-Za-z0-9.,-_ ]+/),
-      sec_heading3: $=> seq('###', /[A-Za-z0-9.,-_ ]+/),
-      sec_heading4: $=> seq('####', /[A-Za-z0-9.,-_ ]+/),
-      sec_heading5: $=> seq('#####', /[A-Za-z0-9.,-_ ]+/),
-      sec_heading6: $=> seq('######', /[A-Za-z0-9.,-_ ]+/),
+      sec_heading1: $=> seq('#', $._section_heading_text),
+      sec_heading2: $=> seq('##', $._section_heading_text),
+      sec_heading3: $=> seq('###', $._section_heading_text),
+      sec_heading4: $=> seq('####', $._section_heading_text),
+      sec_heading5: $=> seq('#####', $._section_heading_text),
+      sec_heading6: $=> seq('######', $._section_heading_text),
 
       //Each sec is defined separately to make it
       //easier to indent from the syntax tree & other
       //stuff like that.
 
       section1: $=> prec.right(12, seq($.sec_heading1, repeat1('\n'),
+                                       repeat($._raw_script),
                                        repeat($.scene),
                                        repeat($.section6),
                                        repeat($.section5),
                                        repeat($.section4),
                                        repeat($.section3),
                                        repeat($.section2),
-                                       repeat('\n'))),
+                                       //repeat('\n')
+                                     )),
 
       section2: $=> prec.right(11, seq($.sec_heading2, repeat1('\n'),
+                                      repeat($._raw_script),
                                       repeat($.scene),
                                       repeat($.section6),
                                       repeat($.section5),
                                       repeat($.section4),
                                       repeat($.section3),
-                                      repeat('\n'))),
+                                      //repeat('\n')
+                                    )),
 
       section3: $=> prec.right(10, seq($.sec_heading3, repeat1('\n'),
+                                      repeat($._raw_script),
                                       repeat($.scene),
                                       repeat($.section6),
                                       repeat($.section5),
                                       repeat($.section4),
-                                      repeat('\n'))),
+                                      //repeat('\n')
+                                    )),
 
       section4: $=> prec.right(9, seq($.sec_heading4, repeat1('\n'),
+                                      repeat($._raw_script),
                                       repeat($.scene),
                                       repeat($.section6),
                                       repeat($.section5),
-                                      repeat('\n'))),
+                                      //repeat('\n')
+                                    )),
 
       section5: $=> prec.right(8, seq($.sec_heading5, repeat1('\n'),
+                                      repeat($._raw_script),
                                       repeat($.scene),
                                       repeat($.section6),
-                                      repeat('\n'))),
+                                      //repeat('\n')
+                                    )),
 
       section6: $=> prec.right(7, seq($.sec_heading6, repeat1('\n'),
+                                      repeat($._raw_script),
                                       repeat($.scene),
-                                      repeat('\n'))),
+                                      //repeat('\n')
+                                    )),
 
       //title page is formatted key: value/s
       title_page: $=> repeat1($.k_v_pair),

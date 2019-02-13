@@ -66,3 +66,27 @@ What do mean it doesn't matter?
 (character)
 (parenthetical)
 (spoken (normal_txt)))))
+===========
+Even More Issues 2
+===========
+#Blahaha
+
+INT. FDAMDKA
+
+#Adadkfjalsdkjf
+
+GAERSDFASDF
+aasldkfjasdf saldsfl.
+
+
+--------------
+(script
+(section1
+(sec_heading1)
+(scene
+(scene_heading)))
+(section1
+(sec_heading1)
+(dialogue
+(character)
+(spoken (normal_txt)))))

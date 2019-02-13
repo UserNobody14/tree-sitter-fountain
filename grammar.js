@@ -10,6 +10,7 @@ module.exports = grammar({
     //TODO: Make less endline char sensitive
     //TODO: make dialog & action able to fall directly under sections.
     //TODO: make internal spoken emphasis chars visible.
+    //TODO: allow trailing/opening whitespaces more?
 
   rules: {
       script: $ => seq(repeat('\n'),
